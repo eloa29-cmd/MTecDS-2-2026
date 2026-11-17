@@ -1,4 +1,25 @@
-<?php include '../../../config/header.php'; ?>
+<?php
+require '../../../config/conexao.php';
+require '../../../config/header.php';
+$pdo = Conexao::conectar();
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$msg = "SELECT usucod AS ID, usunom AS NOM, ususen AS SENHA,usutip AS TIPO FROM usuario ORDER BY usunom";
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+   
+    $nome =  strtoupper(filter_input (INPUT_POST,'unom'));
+    $senha =  strtoupper(filter_input (INPUT_POST,'usen'));
+    $tipo =  strtoupper(filter_input (INPUT_POST,'utip'));
+    $sql = "INSERT INTO usuarios(usunom,ususen,usutip)VALUES(?,?,?);";
+    $prp = $pdo->prepare($sql);
+    if ($prp->execute([$nome,$senha,$tipo])) {
+        $msg = '<span class="alert alert-success text-center">DADOS GRAVADOS COM SUCESSO!</span>';
+    } else {
+        $msg = '<span class="alert alert-danger text-center">ERRO AO GRAVAR OS DADOS!</span>';
+    }
+}  $sql = "INSERT INTO usuarios(usunom,ususen,usutip)VALUES(?,?,?);";
+    $prp = $pdo->prepare($sql);
+    if ($prp->execute([$nome,$senha,$tipo]))
+?>
 <form>
     <div class="form-group mt-2">
         <label for="filtro">Digite um Nome para Filtrar</label>
